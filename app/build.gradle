@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
 }
+//添加Project的butter knife classpath 似乎不是必要的
+//apply plugin: 'com.jakewharton.butterknife'
 
 android {
     compileSdkVersion 29
@@ -36,4 +38,7 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    // 1 引入Butter knife到module
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 }
