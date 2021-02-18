@@ -1,4 +1,4 @@
-include ':templatePattern'
+include ':framelibrary'
 include ':baseLibrary'
 include ':app'
 rootProject.name = "LearnEassyJoke"

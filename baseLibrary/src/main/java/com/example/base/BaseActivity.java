@@ -1,4 +1,4 @@
-package com.example.templatepattern;
+package com.example.base;
 
 import android.content.Intent;
 import android.os.Bundle;

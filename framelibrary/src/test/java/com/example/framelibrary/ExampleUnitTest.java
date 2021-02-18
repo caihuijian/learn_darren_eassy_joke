@@ -1,4 +1,4 @@
-package com.example.templatepattern;
+package com.example.framelibrary;
 
 import org.junit.Test;
 
