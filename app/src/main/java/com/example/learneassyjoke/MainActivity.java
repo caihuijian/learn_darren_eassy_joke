@@ -44,6 +44,7 @@ public class MainActivity extends BaseSkinActivity {
         ViewUtils.injectActivity(this);
         mTextView.setText("Tv text！！！！");
         mButton.setText("Button text！！！！");
+        int x = 2/0;
     }
 
     @OnClick({R.id.tv,R.id.btn})
