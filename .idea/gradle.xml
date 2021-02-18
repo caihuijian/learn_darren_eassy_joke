@@ -13,7 +13,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/ioc" />
+            <option value="$PROJECT_DIR$/baseLibrary" />
+            <option value="$PROJECT_DIR$/templatePattern" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
