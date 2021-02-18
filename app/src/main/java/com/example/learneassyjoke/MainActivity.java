@@ -1,41 +1,56 @@
 package com.example.learneassyjoke;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import com.example.framelibrary.BaseSkinActivity;
+import com.example.ioc.OnClick;
+import com.example.ioc.ViewById;
+import com.example.ioc.ViewUtils;
 
-public class MainActivity extends AppCompatActivity {
 
-    //3 ButterKnife属性初始化 注意View必须有id
-    @BindView(R.id.tv)
+public class MainActivity extends BaseSkinActivity {
+    @ViewById(R.id.tv)
     TextView mTextView;
-    @BindView(R.id.btn)
+    @ViewById(R.id.btn)
     Button mButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //2 初始化ButterKnife
-        ButterKnife.bind(this);
-        //4 ButterKnife属性使用
-        mTextView.setText("ABC");
-        mButton.setText("My Button");
     }
 
-    //5 ButterKnife Event使用
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initTitle() {
+
+    }
+
+    @Override
+    protected void setContentView() {
+        setContentView(R.layout.activity_ioc_test);
+        ViewUtils.injectActivity(this);
+        mTextView.setText("Tv text！！！！");
+        mButton.setText("Button text！！！！");
+    }
+
     @OnClick({R.id.tv,R.id.btn})
-    void onItemClick(View view){
+    public void onItemClick(View view){
         switch (view.getId()){
             case R.id.tv:
-                Toast.makeText(this,"text clicked",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"text view clicked",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn:
                 Toast.makeText(this,"button clicked",Toast.LENGTH_SHORT).show();
