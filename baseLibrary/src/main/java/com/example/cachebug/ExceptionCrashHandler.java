@@ -1,4 +1,4 @@
-package com.example.fixBug;
+package com.example.cachebug;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

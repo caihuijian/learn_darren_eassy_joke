@@ -1,6 +1,7 @@
 package com.example.learneassyjoke;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,8 +12,12 @@ import com.example.ioc.OnClick;
 import com.example.ioc.ViewById;
 import com.example.ioc.ViewUtils;
 
+import java.io.File;
+import java.io.IOException;
+
 
 public class MainActivity extends BaseSkinActivity implements View.OnClickListener {
+    public static final String TAG = "MyActivity";
     @ViewById(R.id.tv)
     TextView mTextView;
     @ViewById(R.id.btn)
@@ -25,7 +30,22 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
 
     @Override
     protected void initData() {
+        // 测试 ,直接获取内部存储里面的 fix.aptach
+        File fixFile = new File(MainActivity.this.getFilesDir(), "fix.apatch");
 
+        if (fixFile.exists()) {
+            // 修复Bug
+            try {
+                // 立马生效不需要重启
+                BaseApplication.mPatchManager.addPatch(fixFile.getAbsolutePath());
+                Log.e(TAG, "initData: 修复成功");
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "initData: 修复失败");
+            }
+        } else {
+            Log.e(TAG, "没有找到apatch补丁文件 " + fixFile);
+        }
     }
 
     @Override

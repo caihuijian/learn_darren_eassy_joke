@@ -5,6 +5,14 @@ plugins {
 //apply plugin: 'com.jakewharton.butterknife'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('D:\\test Darren\\learn_darren_eassy_joke\\joke.jks')
+            storePassword '12345678'
+            keyAlias 'joke'
+            keyPassword '12345678'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "30.0.3"
 
@@ -22,6 +30,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -35,6 +44,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.alipay.euler:andfix:0.5.0@aar'
     implementation project(path: ':framelibrary')
     implementation project(path: ':baseLibrary')
     testImplementation 'junit:junit:4.+'
