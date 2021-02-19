@@ -73,7 +73,7 @@ public class ExceptionCrashHandler implements Thread.UncaughtExceptionHandler {
         // 1.2 手机信息
         // 1.3 版本信息
         // 2.写入文件
-        String crashFileName = saveInfoToSD(e);
+        String crashFileName = saveInfoToCache(e);
 
         Log.e(TAG, "fileName --> " + crashFileName);
         // 让系统默认处理 否则应用发生crash后没有任何反应
@@ -84,7 +84,7 @@ public class ExceptionCrashHandler implements Thread.UncaughtExceptionHandler {
      * 得到获取的 软件信息，设备信息和出错信息
      * 保存在机身内存
      */
-    private String saveInfoToSD(Throwable ex) {
+    private String saveInfoToCache(Throwable ex) {
         String fileName = null;
         StringBuilder stringBuffer = new StringBuilder();
 
