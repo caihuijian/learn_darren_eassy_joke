@@ -12,7 +12,7 @@ import com.example.ioc.ViewById;
 import com.example.ioc.ViewUtils;
 
 
-public class MainActivity extends BaseSkinActivity {
+public class MainActivity extends BaseSkinActivity implements View.OnClickListener {
     @ViewById(R.id.tv)
     TextView mTextView;
     @ViewById(R.id.btn)
@@ -43,18 +43,33 @@ public class MainActivity extends BaseSkinActivity {
         setContentView(R.layout.activity_ioc_test);
         ViewUtils.injectActivity(this);
         mTextView.setText("Tv text！！！！");
+        mTextView.setOnClickListener(this);
         mButton.setText("Button text！！！！");
-        int x = 2/0;
+        mButton.setOnClickListener(this);
     }
 
-    @OnClick({R.id.tv,R.id.btn})
-    public void onItemClick(View view){
-        switch (view.getId()){
+//    @OnClick({R.id.tv, R.id.btn})
+//    public void onItemClick(View view) {
+//        switch (view.getId()) {
+//            case R.id.tv:
+//                int x = 2 / 0;
+//                Toast.makeText(this, "text view clicked" + x, Toast.LENGTH_SHORT).show();
+//                break;
+//            case R.id.btn:
+//                Toast.makeText(this, "button clicked", Toast.LENGTH_SHORT).show();
+//                break;
+//        }
+//    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.tv:
-                Toast.makeText(this,"text view clicked",Toast.LENGTH_SHORT).show();
+                int x = 2 / 0;
+                Toast.makeText(this, "text view clicked" + x, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn:
-                Toast.makeText(this,"button clicked",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "button clicked", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

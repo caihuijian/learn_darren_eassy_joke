@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,10 +12,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -32,7 +33,7 @@ public class ExceptionCrashHandler implements Thread.UncaughtExceptionHandler {
     private Thread.UncaughtExceptionHandler mDefaultHandler;
 
     // 上下文  用于获取版本信息和手机信息
-    private Context mContext;
+    private WeakReference<Context>  mContextRef;
 
     public static ExceptionCrashHandler getInstance() {
         if (mInstance == null) {
@@ -47,7 +48,7 @@ public class ExceptionCrashHandler implements Thread.UncaughtExceptionHandler {
 
     public void init(Context context) {
         Log.e(TAG, " ExceptionCrashHandler init ");
-        /**
+        /*
          * 官方解释
          * Set the handler invoked when this thread abruptly terminates
          * due to an uncaught exception.
@@ -57,7 +58,7 @@ public class ExceptionCrashHandler implements Thread.UncaughtExceptionHandler {
         Thread.currentThread().setUncaughtExceptionHandler(this);
         // 获取系统默认的UncaughtException处理器
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-        this.mContext = context;
+        this.mContextRef = new WeakReference<>(context);
     }
 
     private ExceptionCrashHandler() {
@@ -75,93 +76,99 @@ public class ExceptionCrashHandler implements Thread.UncaughtExceptionHandler {
         String crashFileName = saveInfoToSD(e);
 
         Log.e(TAG, "fileName --> " + crashFileName);
+        // 让系统默认处理 否则应用发生crash后没有任何反应
+        mDefaultHandler.uncaughtException(t, e);
     }
 
     /**
      * 得到获取的 软件信息，设备信息和出错信息
      * 保存在机身内存
-     *
-     * @return
      */
     private String saveInfoToSD(Throwable ex) {
         String fileName = null;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder stringBuffer = new StringBuilder();
 
         //遍历手机信息 格式化后输出
-        for (Map.Entry<String, String> entry : obtainSimpleInfo(mContext)
+        for (Map.Entry<String, String> entry : obtainSimpleInfo(mContextRef.get())
                 .entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            sb.append(key).append(" = ").append(value).append("\n");
+            stringBuffer.append(key).append(" = ").append(value).append("\n");
         }
-        sb.append(obtainExceptionInfo(ex));
+        stringBuffer.append(obtainExceptionInfo(ex));
 
-        //TODO 为什么获取外部存储的可用状态 最后存储在内部存储？？？
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            // 获取crash文件夹
-            File dir = new File(mContext.getFilesDir() + File.separator + "crash"
-                    + File.separator);
+        //这里原课程有问题 为什么获取外部存储的可用状态 最后存储在内部存储 因此我注释掉了最外层的判断
+        //if (Environment.getExternalStorageState().equals( Environment.MEDIA_MOUNTED)) {
+        // 获取crash文件夹
+        File dir = new File(mContextRef.get().getFilesDir() + File.separator + "crash"
+                + File.separator);
 
-            // 先删除之前的异常信息
-            if (dir.exists()) {
-                deleteDir(dir);
-            }
-
-            // 再重新创建文件夹
-            if (!dir.exists()) {
-                dir.mkdir();
-            }
-            // 创建文件
-            try {
-                fileName = dir.toString()
-                        + File.separator
-                        + getAssignTime("yyyy_MM_dd_HH_mm") + ".txt";
-                FileOutputStream fos = new FileOutputStream(fileName);
-                fos.write(sb.toString().getBytes());
-                fos.flush();
-                fos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            Log.e(TAG, "saveInfoToSD: failed no sdcard mounted");
+        // 先删除之前的异常信息
+        if (dir.exists()) {
+            deleteDir(dir);
         }
+
+        // 再重新创建文件夹
+        if (!dir.exists()) {
+            boolean res = dir.mkdir();
+            if (!res) {
+                Log.e(TAG, "saveInfoToSD: create dir failed ");
+                return "";
+            }
+        }
+        // 创建文件
+        try {
+            fileName = dir.toString()
+                    + File.separator
+                    + getAssignTime() + ".txt";
+            FileOutputStream fos = new FileOutputStream(fileName);
+            fos.write(stringBuffer.toString().getBytes());
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //}
         return fileName;
     }
 
     /**
      * 返回当前日期根据格式
      **/
-    private String getAssignTime(String dateFormatStr) {
-        DateFormat dataFormat = new SimpleDateFormat(dateFormatStr);
+    private String getAssignTime() {
+        DateFormat dataFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm", Locale.US);
         long currentTime = System.currentTimeMillis();
         return dataFormat.format(currentTime);
     }
 
-
-    /**
-     * 递归删除目录下的所有文件及子目录下所有文件
-     *
-     * @param dir 将要删除的文件目录
-     * @return boolean Returns "true" if all deletions were successful. If a
-     * deletion fails, the method stops attempting to delete and returns
-     * "false".
-     */
-    private boolean deleteDir(File dir) {
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            // 递归删除目录中的子目录下
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
-                if (!success) {
-                    return false;
+    public static void deleteDir(File file) {
+        boolean res;
+        if (file.isFile()) {
+            res = file.delete();
+            if (!res){
+                Log.e(TAG, "deleteDir: failed when delete "+ file);
+            }
+            return;
+        }
+        if (file.isDirectory()) {
+            File[] childFile = file.listFiles();
+            if (childFile == null || childFile.length == 0) {
+                res = file.delete();
+                if (!res){
+                    Log.e(TAG, "deleteDir: failed when delete "+ file);
                 }
+                return;
+            }
+            for (File f : childFile) {
+                deleteDir(f);
+            }
+            res = file.delete();
+            if (!res){
+                Log.e(TAG, "deleteDir: failed when delete "+ file);
             }
         }
-        // 目录此时为空，可以删除
-        return true;
     }
+
 
     /**
      * 获取系统未捕捉的错误信息 将其转化为字符串
@@ -177,7 +184,6 @@ public class ExceptionCrashHandler implements Thread.UncaughtExceptionHandler {
     /**
      * 获取一些简单的信息,软件版本，手机版本，型号等信息存放在HashMap中
      *
-     * @return
      */
     private HashMap<String, String> obtainSimpleInfo(Context context) {
         HashMap<String, String> map = new HashMap<>();
@@ -202,19 +208,18 @@ public class ExceptionCrashHandler implements Thread.UncaughtExceptionHandler {
      * 获取机器信息
      */
     public static String getMobileInfo() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             Field[] fields = Build.class.getDeclaredFields();
             for (Field field : fields) {
                 field.setAccessible(true);
                 String name = field.getName();
                 String value = field.get(null).toString();
-                sb.append(name + "=" + value);
-                sb.append("\n");
+                stringBuilder.append(name).append("=").append(value).append("\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return sb.toString();
+        return stringBuilder.toString();
     }
 }
