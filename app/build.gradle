@@ -13,18 +13,30 @@ android {
             keyPassword '12345678'
         }
     }
-    compileSdkVersion 29
+    compileSdkVersion 28
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.example.learneassyjoke"
         minSdkVersion 24
-        targetSdkVersion 29
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+//
+//    dexOptions {
+//        javaMaxHeapSize "4g" //当调用dx时指定-Xmx值
+//        preDexLibraries = false //是否预先dex库，它可以改善增量的生成，但是在clear build可能会变慢
+//        def listFile = project.rootDir.absolutePath + '/app/maindexlist.txt'
+//        additionalParameters = [//dex参数详见 dx --help
+//                                '--multi-dex',//多分包
+//                                '--set-max-idx-number=60000',//每个包内方法数上限
+//                                '--main-dex-list=' + listFile,//打包进主classes.dex的文件列表
+//                                '--minimal-main-dex' //使上一句生效
+//        ]
+//    }
 
     buildTypes {
         release {
