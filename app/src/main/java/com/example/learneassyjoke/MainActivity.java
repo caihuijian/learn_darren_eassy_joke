@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.framelibrary.BaseSkinActivity;
+import com.example.framelibrary.navigationbar.DefaultNavigationBar;
 import com.example.ioc.ViewById;
 import com.example.ioc.ViewUtils;
 
@@ -61,12 +62,17 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
 
     @Override
     protected void initTitle() {
-
+        new DefaultNavigationBar.Builder(this)
+                .setTitle("投稿")
+                .setRightIcon(R.mipmap.ic_launcher)
+                .setRightText("右边")
+                .setRightClickListener(v -> Toast.makeText(MainActivity.this, "右边", Toast.LENGTH_SHORT).show())
+                .builder();
     }
 
     @Override
     protected void setContentView() {
-        setContentView(R.layout.activity_ioc_test);
+        setContentView(R.layout.activity_main);
         ViewUtils.injectActivity(this);
         mTextView.setText("This is Bug text ");
         mTextView.setOnClickListener(this);
