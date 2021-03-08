@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.core.content.ContextCompat;
@@ -90,10 +91,9 @@ public abstract class AbsNavigationBar<P extends AbsNavigationBar.Builder.AbsNav
      */
     public void createAndBind() {
         if(mParams.mParent == null){
-            // 获取activity的根布局
-            ViewGroup activityRoot = (ViewGroup) ((Activity)(mParams.mContext))
-                    .findViewById(android.R.id.content);
-            // 获取navigationBar的父容器viewGroup
+            // 获取DecorView
+            ViewGroup activityRoot = (ViewGroup) ((Activity) mParams.mContext).getWindow().getDecorView();
+            // 获取navigationBar的父容器viewGroup(R.id.content的父布局)
             mParams.mParent = (ViewGroup) activityRoot.getChildAt(0);
         }
         if(mParams.mParent == null){

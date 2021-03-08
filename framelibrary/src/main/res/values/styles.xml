@@ -28,6 +28,7 @@
     </style>
 
     <style name="back_view" parent="@style/title_bar_button">
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/btn_back</item>
         <item name="android:paddingLeft">0.0dip</item>
