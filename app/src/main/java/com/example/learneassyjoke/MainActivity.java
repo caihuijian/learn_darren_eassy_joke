@@ -1,5 +1,6 @@
 package com.example.learneassyjoke;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -78,6 +79,7 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
         mTextView.setOnClickListener(this);
         mButton.setText("Button text！！！！");
         mButton.setOnClickListener(this);
+        findViewById(R.id.testOKHttp).setOnClickListener(this::onClick);
     }
 
 //    @OnClick({R.id.tv, R.id.btn})
@@ -129,6 +131,11 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
                         .setView(button)
                         .create();
                 alertDialog.show();
+                break;
+            case R.id.testOKHttp:
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, ActivityTestOKHttp.class);
+                startActivity(intent);
                 break;
         }
     }

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.learneassyjoke">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
@@ -19,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ActivityButterKnifeTest"></activity>
+        <activity android:name=".ActivityTestOKHttp"></activity>
     </application>
 
 </manifest>
