@@ -12,7 +12,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.framelibrary.BaseSkinActivity;
+import com.example.framelibrary.http.DefaultHttpCallBack;
 import com.example.framelibrary.navigationbar.DefaultNavigationBar;
+import com.example.http.HttpUtils;
+import com.example.http.OkHttpEngine;
 import com.example.ioc.ViewById;
 import com.example.ioc.ViewUtils;
 
@@ -80,6 +83,35 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
         mButton.setText("Button text！！！！");
         mButton.setOnClickListener(this);
         findViewById(R.id.testOKHttp).setOnClickListener(this::onClick);
+        findViewById(R.id.testMyOKHttp).setOnClickListener(this::doMyHttpRequest);
+    }
+
+    private void doMyHttpRequest(View view) {
+        HttpUtils.init(new OkHttpEngine());
+        HttpUtils.with(MainActivity.this)
+                .exchangeEngine(new OkHttpEngine())
+//                .addParam("iid", "6152551759")
+//                .addParam("aid", "7")
+//                .url("http://is.snssdk.com/2/essay/discovery/v3/")
+                .url("https://www.baidu.com/")
+//                .post()
+                .execute(new DefaultHttpCallBack() {
+
+                    @Override
+                    public void onSuccess(Object result) {
+                        Log.d(TAG, "onSuccess: " + result);
+                    }
+
+                    @Override
+                    public void onPreExecute() {
+                        Log.d(TAG, "onPreExecute: ");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.d(TAG, "onError: " + e.getStackTrace());
+                    }
+                });
     }
 
 //    @OnClick({R.id.tv, R.id.btn})
