@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * Created by hjcai on 2021/3/12.
@@ -66,6 +67,16 @@ class DaoSupport<T> implements IDaoSupport<T> {
         ContentValues values = contentValuesByObj(t);
 
         return mSqLiteDatabase.insert(DaoUtil.getTableName(mClazz), null, values);
+    }
+
+    @Override
+    public void inert(List<T> data) {
+        mSqLiteDatabase.beginTransaction();
+        for (T datum : data) {
+            inert(datum);
+        }
+        mSqLiteDatabase.setTransactionSuccessful();
+        mSqLiteDatabase.endTransaction();
     }
 
     @Override

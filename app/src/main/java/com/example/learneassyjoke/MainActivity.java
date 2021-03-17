@@ -24,6 +24,8 @@ import com.example.learneassyjoke.model.Person;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimerTask;
 
 
@@ -44,11 +46,13 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
         IDaoSupport<Person> daoSupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class);
         // 最少的知识原则
         new Thread(() -> {
-            long startTime = System.currentTimeMillis();
             int totalNum = 1000;
+            List<Person> personList = new ArrayList<>();
+            long startTime = System.currentTimeMillis();
             for (int i = 0; i < totalNum; i++) {
-                daoSupport.inert(new Person("hjcai", i));
+                personList.add(new Person("hjcai", i));
             }
+            daoSupport.inert(personList);
             long endTime = System.currentTimeMillis();
             Log.e(TAG, " insert " + totalNum + " cost time -> " + (endTime - startTime));
         }).start();

@@ -2,6 +2,8 @@ package com.example.framelibrary.database;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.List;
+
 /**
  * Created by hjcai on 2021/3/12.
  * 数据库支持类的定义
@@ -12,6 +14,9 @@ public interface IDaoSupport<T> {
 
     // 数据库插入数据
     public long inert(T t);
+
+    // 批量插入数据
+    public void inert(List<T> t);
 
     public void deleteAll();
 
