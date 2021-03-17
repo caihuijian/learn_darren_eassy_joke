@@ -31,4 +31,10 @@
         android:layout_height="wrap_content"
         android:text="测试自己框架的OKHttp" />
 
+    <Button
+        android:id="@+id/clearData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="清除数据" />
+
 </LinearLayout>

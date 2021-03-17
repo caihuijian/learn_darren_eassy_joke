@@ -24,6 +24,7 @@ import com.example.learneassyjoke.model.Person;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.TimerTask;
 
 
 public class MainActivity extends BaseSkinActivity implements View.OnClickListener {
@@ -42,7 +43,15 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
     protected void initData() {
         IDaoSupport<Person> daoSupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class);
         // 最少的知识原则
-        daoSupport.inert(new Person("hjcai", 30));
+        new Thread(() -> {
+            long startTime = System.currentTimeMillis();
+            int totalNum = 1000;
+            for (int i = 0; i < totalNum; i++) {
+                daoSupport.inert(new Person("hjcai", i));
+            }
+            long endTime = System.currentTimeMillis();
+            Log.e(TAG, " insert " + totalNum + " cost time -> " + (endTime - startTime));
+        }).start();
         //AliFix();
     }
 
@@ -90,6 +99,12 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
         mButton.setOnClickListener(this);
         findViewById(R.id.testOKHttp).setOnClickListener(this::onClick);
         findViewById(R.id.testMyOKHttp).setOnClickListener(this::doMyHttpRequest);
+        findViewById(R.id.clearData).setOnClickListener(this::clearData);
+    }
+
+    private void clearData(View view) {
+        IDaoSupport<Person> daoSupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class);
+        daoSupport.deleteAll();
     }
 
     private void doMyHttpRequest(View view) {

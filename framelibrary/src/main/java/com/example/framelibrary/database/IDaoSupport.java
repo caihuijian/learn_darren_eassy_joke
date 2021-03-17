@@ -13,4 +13,6 @@ public interface IDaoSupport<T> {
     // 数据库插入数据
     public long inert(T t);
 
+    public void deleteAll();
+
 }

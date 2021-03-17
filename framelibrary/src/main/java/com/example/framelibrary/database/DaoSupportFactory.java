@@ -18,6 +18,7 @@ public class DaoSupportFactory {
 
     private DaoSupportFactory(Context context) {
         // 把数据库放到内存卡里面  TODO 没有判断是否有存储卡 没有动态申请权限
+        // path:/storage/emulated/0/Android/data/com.example.learneassyjoke/files/nhdz/database
         File dbRoot = new File(context.getExternalFilesDir(null)
                 .getAbsolutePath() + File.separator + "nhdz" + File.separator + "database");
         if (!dbRoot.exists()) {

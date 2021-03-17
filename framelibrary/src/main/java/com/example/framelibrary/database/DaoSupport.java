@@ -68,6 +68,12 @@ class DaoSupport<T> implements IDaoSupport<T> {
         return mSqLiteDatabase.insert(DaoUtil.getTableName(mClazz), null, values);
     }
 
+    @Override
+    public void deleteAll() {
+        mSqLiteDatabase.execSQL("DROP TABLE " + DaoUtil.getTableName(mClazz));
+        //mSqLiteDatabase.execSQL("DELETE FROM " + DaoUtil.getTableName(mClazz));
+    }
+
     // 查询
 
     // 修改
@@ -99,7 +105,7 @@ class DaoSupport<T> implements IDaoSupport<T> {
                         String.class, value.getClass());
                 // 通过反射执行ContentValues的putXXX方法
                 // 相当于调用类似 contentValues.put("age",30);
-                putMethod.invoke(contentValues, key, value);// TODO 有问题
+                putMethod.invoke(contentValues, key, value);
             } catch (Exception e) {
                 e.printStackTrace();
             }
