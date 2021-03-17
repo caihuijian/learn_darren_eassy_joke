@@ -12,12 +12,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.framelibrary.BaseSkinActivity;
+import com.example.framelibrary.database.DaoSupportFactory;
+import com.example.framelibrary.database.IDaoSupport;
 import com.example.framelibrary.http.DefaultHttpCallBack;
 import com.example.framelibrary.navigationbar.DefaultNavigationBar;
 import com.example.http.HttpUtils;
 import com.example.http.OkHttpEngine;
 import com.example.ioc.ViewById;
 import com.example.ioc.ViewUtils;
+import com.example.learneassyjoke.model.Person;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +40,9 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
 
     @Override
     protected void initData() {
+        IDaoSupport<Person> daoSupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class);
+        // 最少的知识原则
+        daoSupport.inert(new Person("hjcai", 30));
         //AliFix();
     }
 
