@@ -49,7 +49,7 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
             List<Person> personList = new ArrayList<>();
             long startTime = System.currentTimeMillis();
             for (int i = 0; i < totalNum; i++) {
-                personList.add(new Person("hjcai", i));
+                personList.add(new Person("hjcai", "shanghai", i));
             }
             daoSupport.insert(personList);
             long endTime = System.currentTimeMillis();

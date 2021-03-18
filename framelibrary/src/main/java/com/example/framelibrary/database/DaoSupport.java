@@ -2,11 +2,13 @@ package com.example.framelibrary.database;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by hjcai on 2021/3/12.
@@ -17,6 +19,10 @@ class DaoSupport<T> implements IDaoSupport<T> {
     // 数据库需要操作的 表中存储的 对象类型
     private Class<T> mClazz;
     private String TAG = "DaoSupport";
+
+    private static final Object[] mPutMethodArgs = new Object[2];//存储key value 如 name "hjcai"//个人觉得这个变量意义不大
+    // 数据库优化 缓存数据类型 减少反射的调用次数
+    private static final Map<String, Method> mPutMethods = new ArrayMap<>();
 
     public DaoSupport(SQLiteDatabase sqLiteDatabase, Class<T> clazz) {
         init(sqLiteDatabase, clazz);
@@ -107,18 +113,28 @@ class DaoSupport<T> implements IDaoSupport<T> {
                 // 获取field的value(如30)
                 Object value = field.get(obj);
 
-                // 虽然使用反射会有一点性能的影响 但是影响很小
-                // 而且源码里面  activity实例的创建 View创建反射等都使用了反射
-                // 因此这里也会使用反射 获取put方法
-                // (如ContentValues.class.getDeclaredMethod("put",String.class, java.lang.Integer))
-                // 代表希望调用的是put(String key, Integer value)的方法
-                putMethod = ContentValues.class.getDeclaredMethod("put",
-                        String.class, value.getClass());
+                mPutMethodArgs[0] = key;
+                mPutMethodArgs[1] = value;
+
+                // 虽然使用反射会有一点性能的影响 但是影响很小 而且源码里面  activity实例的创建 View创建反射等都使用了反射 因此这里也会使用反射 获取put方法
+                String filedTypeName = field.getType().getName();//获取filed的数据类型(如Integer)
+                // filedTypeName的作用是作为存储mPutMethods的key
+                // 因此使用的key类似 java.lang.String int boolean等
+                putMethod = mPutMethods.get(filedTypeName);
+                if (putMethod == null) {
+                    putMethod = ContentValues.class.getDeclaredMethod("put",
+                            String.class, value.getClass());
+                    // 缓存PutMethods 下次就不需要再反射了
+                    mPutMethods.put(filedTypeName, putMethod);
+                }
                 // 通过反射执行ContentValues的putXXX方法
                 // 相当于调用类似 contentValues.put("age",30);
-                putMethod.invoke(contentValues, key, value);
+                putMethod.invoke(contentValues, mPutMethodArgs);
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                mPutMethodArgs[0] = null;
+                mPutMethodArgs[1] = null;
             }
         }
         return contentValues;
