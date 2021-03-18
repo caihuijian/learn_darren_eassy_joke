@@ -124,7 +124,10 @@ class DaoSupport<T> implements IDaoSupport<T> {
                 if (putMethod == null) {
                     putMethod = ContentValues.class.getDeclaredMethod("put",
                             String.class, value.getClass());
-                    // 缓存PutMethods 下次就不需要再反射了
+                    // 缓存PutMethods 下次遇到下面类似的一样的方法 就不需要再反射了
+                    // put(String key, String value)
+                    // put(String key, Integer value)
+                    // put(String key, Boolean value)
                     mPutMethods.put(filedTypeName, putMethod);
                 }
                 // 通过反射执行ContentValues的putXXX方法
