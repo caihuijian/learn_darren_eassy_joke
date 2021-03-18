@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimerTask;
 
 
 public class MainActivity extends BaseSkinActivity implements View.OnClickListener {
@@ -52,7 +51,7 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
             for (int i = 0; i < totalNum; i++) {
                 personList.add(new Person("hjcai", i));
             }
-            daoSupport.inert(personList);
+            daoSupport.insert(personList);
             long endTime = System.currentTimeMillis();
             Log.e(TAG, " insert " + totalNum + " cost time -> " + (endTime - startTime));
         }).start();

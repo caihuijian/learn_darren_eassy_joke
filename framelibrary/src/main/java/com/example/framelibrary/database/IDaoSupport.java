@@ -13,10 +13,10 @@ public interface IDaoSupport<T> {
     void init(SQLiteDatabase sqLiteDatabase, Class<T> clazz);
 
     // 数据库插入数据
-    public long inert(T t);
+    public long insert(T t);
 
     // 批量插入数据
-    public void inert(List<T> t);
+    public void insert(List<T> t);
 
     public void deleteAll();
 

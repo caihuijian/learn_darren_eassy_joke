@@ -1,9 +1,7 @@
 package com.example.framelibrary.database;
 
-import android.text.TextUtils;
 import android.util.Log;
 
-import java.util.Locale;
 
 /**
  * Created by hjcai on 2021/3/12.

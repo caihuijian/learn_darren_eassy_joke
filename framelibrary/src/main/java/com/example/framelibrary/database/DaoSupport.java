@@ -51,7 +51,7 @@ class DaoSupport<T> implements IDaoSupport<T> {
 
     // 插入数据库 类型为任意类型
     @Override
-    public long inert(T t) {
+    public long insert(T t) {
         /*
         通常我们可能直接调用
         ContentValues values = new ContentValues();
@@ -70,10 +70,10 @@ class DaoSupport<T> implements IDaoSupport<T> {
     }
 
     @Override
-    public void inert(List<T> data) {
+    public void insert(List<T> data) {
         mSqLiteDatabase.beginTransaction();
         for (T datum : data) {
-            inert(datum);
+            insert(datum);
         }
         mSqLiteDatabase.setTransactionSuccessful();
         mSqLiteDatabase.endTransaction();
