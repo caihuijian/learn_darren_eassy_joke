@@ -18,6 +18,9 @@ public interface IDaoSupport<T> {
     // 批量插入数据
     public void insert(List<T> t);
 
+    // 查询所有
+    public List<T> queryAll();
+
     public void deleteAll();
 
 }

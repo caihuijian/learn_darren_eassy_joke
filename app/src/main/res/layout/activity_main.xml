@@ -37,4 +37,10 @@
         android:layout_height="wrap_content"
         android:text="清除数据" />
 
+    <Button
+        android:id="@+id/queryAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查询所有" />
+
 </LinearLayout>

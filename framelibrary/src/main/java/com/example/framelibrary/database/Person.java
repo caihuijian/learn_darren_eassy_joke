@@ -1,5 +1,8 @@
-package com.example.learneassyjoke.model;
+package com.example.framelibrary.database;
 
+
+//该类是为了测试不使用反射而写的 写在这里是不合理的，使用反射的时候可以删除
+@Deprecated
 public class Person {
 
     private String name;

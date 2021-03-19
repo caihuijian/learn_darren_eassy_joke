@@ -1,12 +1,14 @@
 package com.example.framelibrary.database;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.ArrayMap;
 import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -85,17 +87,69 @@ class DaoSupport<T> implements IDaoSupport<T> {
         mSqLiteDatabase.endTransaction();
     }
 
+    // 删除
     @Override
     public void deleteAll() {
         mSqLiteDatabase.execSQL("DROP TABLE " + DaoUtil.getTableName(mClazz));
         //mSqLiteDatabase.execSQL("DELETE FROM " + DaoUtil.getTableName(mClazz));
     }
 
-    // 查询
+    // 查询所有
+    @Override
+    public List<T> queryAll() {
+        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, null, null, null, null, null);
+        return cursorToList(cursor);
+    }
+
+    private List<T> cursorToList(Cursor cursor) {
+        List<T> list = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Person person = new Person(cursor.getString(cursor
+                    .getColumnIndex("name")),
+                    cursor.getString(cursor
+                            .getColumnIndex("address")),
+                    cursor.getInt(cursor
+                            .getColumnIndex("age"))
+            );
+            list.add((T) person);
+        }
+        Log.e(TAG, "cursorToList: " + list);
+        return list;
+    }
+
+//    private List<T> cursorToList(Cursor cursor) {
+//        List<T> list = new ArrayList<>();
+//        if (cursor != null){
+//            while (cursor.moveToNext()){
+//                // 通过反射创建T对象
+//                T instance = mClazz.newInstance();
+//                Field[] fields = mClazz.getDeclaredFields();
+//
+//                // 遍历field 从数据库去数据填充到instance
+//                for (Field field : fields){
+//                    field.setAccessible(true);
+//                    String name = field.getName();
+//                    // 查询当前name存储的列
+//                    int index = cursor.getColumnIndex(name);
+//                    if (index != -1){
+//                        Method cursorMethod = cursorMethod(field.getType());//TODO
+//                    }else{
+//                        Log.e(TAG, "cursorToList: 该属性没有存储在数据库中");
+//                        continue;
+//                    }
+//                }
+//
+//
+//                // 将填充好的数据加入列表
+//                list.add(instance);
+//            }
+//        }
+//
+//        return list;
+//    }
 
     // 修改
 
-    // 删除
 
     // obj 转成 ContentValues
     // ContentValues实际作用类似与hashMap 只不过它的value只能push基本类型

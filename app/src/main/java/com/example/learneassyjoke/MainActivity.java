@@ -103,6 +103,18 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
         findViewById(R.id.testOKHttp).setOnClickListener(this::onClick);
         findViewById(R.id.testMyOKHttp).setOnClickListener(this::doMyHttpRequest);
         findViewById(R.id.clearData).setOnClickListener(this::clearData);
+        findViewById(R.id.queryAll).setOnClickListener(this::queryAll);
+    }
+
+    private void queryAll(View view) {
+        new Thread(() -> {
+            long startTime = System.currentTimeMillis();
+            IDaoSupport<Person> daoSupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class);
+            List<Person> people = daoSupport.queryAll();
+            Log.e(TAG, "queryAll: " + people.size());
+            long endTime = System.currentTimeMillis();
+            Log.e(TAG, " queryAll cost time -> " + (endTime - startTime));
+        }).start();
     }
 
     private void clearData(View view) {
