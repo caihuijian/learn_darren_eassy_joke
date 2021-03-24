@@ -43,4 +43,10 @@
         android:layout_height="wrap_content"
         android:text="查询所有" />
 
+    <Button
+        android:id="@+id/queryAllReflect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="反射查询所有" />
+
 </LinearLayout>

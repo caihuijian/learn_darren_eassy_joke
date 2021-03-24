@@ -45,7 +45,7 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
         IDaoSupport<Person> daoSupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class);
         // 最少的知识原则
         new Thread(() -> {
-            int totalNum = 1000;
+            int totalNum = 10;
             List<Person> personList = new ArrayList<>();
             long startTime = System.currentTimeMillis();
             for (int i = 0; i < totalNum; i++) {
@@ -104,6 +104,18 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
         findViewById(R.id.testMyOKHttp).setOnClickListener(this::doMyHttpRequest);
         findViewById(R.id.clearData).setOnClickListener(this::clearData);
         findViewById(R.id.queryAll).setOnClickListener(this::queryAll);
+        findViewById(R.id.queryAllReflect).setOnClickListener(this::queryAllReflect);
+    }
+
+    private void queryAllReflect(View view) {
+        new Thread(() -> {
+            long startTime = System.currentTimeMillis();
+            IDaoSupport<Person> daoSupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class);
+            List<Person> people = daoSupport.queryAllByReflect();
+            Log.e(TAG, "queryAllReflect: " + people);
+            long endTime = System.currentTimeMillis();
+            Log.e(TAG, " queryAllReflect cost time -> " + (endTime - startTime));
+        }).start();
     }
 
     private void queryAll(View view) {
@@ -111,7 +123,7 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
             long startTime = System.currentTimeMillis();
             IDaoSupport<Person> daoSupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class);
             List<Person> people = daoSupport.queryAll();
-            Log.e(TAG, "queryAll: " + people.size());
+            Log.e(TAG, "queryAll: " + people);
             long endTime = System.currentTimeMillis();
             Log.e(TAG, " queryAll cost time -> " + (endTime - startTime));
         }).start();

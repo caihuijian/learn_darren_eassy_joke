@@ -1,6 +1,9 @@
 package com.example.framelibrary.database;
 
+import android.text.TextUtils;
 import android.util.Log;
+
+import java.util.Locale;
 
 
 /**
@@ -37,5 +40,14 @@ class DaoUtil {
             Log.e(TAG, "getColumnType: invalid type!");
         }
         return value;
+    }
+
+    // 使得参数string开头字母大写
+    public static String capitalize(String string) {
+        if (!TextUtils.isEmpty(string)) {
+            // 前面把首字符大写 后面将剩余部分拼接上
+            return string.substring(0, 1).toUpperCase(Locale.US) + string.substring(1);
+        }
+        return string == null ? null : "";
     }
 }

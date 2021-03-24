@@ -13,14 +13,17 @@ public interface IDaoSupport<T> {
     void init(SQLiteDatabase sqLiteDatabase, Class<T> clazz);
 
     // 数据库插入数据
-    public long insert(T t);
+    long insert(T t);
 
     // 批量插入数据
-    public void insert(List<T> t);
+    void insert(List<T> t);
 
     // 查询所有
-    public List<T> queryAll();
+    List<T> queryAll();
 
-    public void deleteAll();
+    // 查询所有 使用反射
+    List<T> queryAllByReflect();
+
+    void deleteAll();
 
 }

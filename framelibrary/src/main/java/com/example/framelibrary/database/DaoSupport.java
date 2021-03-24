@@ -7,7 +7,9 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +96,7 @@ class DaoSupport<T> implements IDaoSupport<T> {
         //mSqLiteDatabase.execSQL("DELETE FROM " + DaoUtil.getTableName(mClazz));
     }
 
-    // 查询所有
+    // 查询所有 不使用反射
     @Override
     public List<T> queryAll() {
         Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, null, null, null, null, null);
@@ -111,45 +113,130 @@ class DaoSupport<T> implements IDaoSupport<T> {
                     cursor.getInt(cursor
                             .getColumnIndex("age"))
             );
-            list.add((T) person);
+            list.add((T) person);//这里也是有问题的 不够通用
         }
         Log.e(TAG, "cursorToList: " + list);
         return list;
     }
 
-//    private List<T> cursorToList(Cursor cursor) {
-//        List<T> list = new ArrayList<>();
-//        if (cursor != null){
-//            while (cursor.moveToNext()){
-//                // 通过反射创建T对象
-//                T instance = mClazz.newInstance();
-//                Field[] fields = mClazz.getDeclaredFields();
-//
-//                // 遍历field 从数据库去数据填充到instance
-//                for (Field field : fields){
-//                    field.setAccessible(true);
-//                    String name = field.getName();
-//                    // 查询当前name存储的列
-//                    int index = cursor.getColumnIndex(name);
-//                    if (index != -1){
-//                        Method cursorMethod = cursorMethod(field.getType());//TODO
-//                    }else{
-//                        Log.e(TAG, "cursorToList: 该属性没有存储在数据库中");
-//                        continue;
-//                    }
-//                }
-//
-//
-//                // 将填充好的数据加入列表
-//                list.add(instance);
-//            }
-//        }
-//
-//        return list;
-//    }
+    @Override
+    public List<T> queryAllByReflect() {
+        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, null, null, null, null, null);
+        return cursorToListByReflect(cursor);
+    }
 
-    // 修改
+    // 多次调用反射 查询所有列表
+    private List<T> cursorToListByReflect(Cursor cursor) {
+        List<T> list = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            // 通过反射创建T对象 第一次反射 以Person为例 相当于调用Person p = new Person()
+            T instance = null;// 要调用此方法 必须有无参构造方法
+            try {
+                instance = mClazz.newInstance();
+                // 反射获取T对象所有的属性 第二次反射
+                Field[] fields = mClazz.getDeclaredFields();
+                // 遍历field 从数据库取出数据填充到instance
+                for (Field field : fields) {
+                    Object value = null;
+                    field.setAccessible(true);
+                    // 以Person为例 它有个属性String name， fieldName 则是 name
+                    String fieldName = field.getName();
+                    // 查询当前属性在数据库中所在的列 下面则相当于调用cursor.getColumnIndex("name")
+                    int index = cursor.getColumnIndex(fieldName);
+                    if (index != -1) {
+                        // 根据对象T的属性类型推算cursor的方法 如cursor.getString cursor.getInt
+                        Method cursorGetColumnMethod = convertType2CursorMethod(field.getType());// 在该方法进行第三次反射
+                        // 通过反射获取 value 第四次反射 相当于cursor.getString(cursor.getColumnIndex("name"))//cursor.getColumnIndex("name")在上面已经调用
+                        value = cursorGetColumnMethod.invoke(cursor, index);
+                        if (value == null) {
+                            continue;
+                        }
+                        // 处理一些特殊的部分
+                        if (field.getType() == boolean.class || field.getType() == Boolean.class) {
+                            // sqlite不支持bool类型 使用0代表false 1代表true
+                            if ("0".equals(String.valueOf(value))) {
+                                value = false;
+                            } else if ("1".equals(String.valueOf(value))) {
+                                value = true;
+                            }
+                        } else if (field.getType() == char.class || field.getType() == Character.class) {
+                            // sqlite不支持char类型 取第0位即可
+                            value = ((String) value).charAt(0);
+                        } else if (field.getType() == Date.class) {
+                            // sqlite不支持Date类型 存储的是时间戳
+                            long date = (Long) value;
+                            if (date <= 0) {
+                                value = null;
+                            } else {
+                                value = new Date(date);
+                            }
+                        }
+                    } else {
+                        Log.e(TAG, "cursorToList: 该属性没有存储在数据库中");
+                        continue;
+                    }
+                    // 反射注入属性的值(以person为例,类似调用person.setName(value))
+                    // 第五次反射
+                    field.set(instance, value);
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            list.add(instance);
+        }
+        cursor.close();
+        Log.e(TAG, "cursorToList: " + list.size());
+        return list;
+    }
 
+    // 获取cursor的方法
+    private Method convertType2CursorMethod(Class<?> type) throws NoSuchMethodException {
+        // 根据数据类型 得到不同cursor方法
+        String methodName = getColumnMethodName(type);
+        // 第三次反射 根据方法名和参数类型调用
+        Method method = Cursor.class.getMethod(methodName, int.class);
+        return method;
+    }
+
+    private String getColumnMethodName(Class<?> fieldType) {
+        String typeName;
+        if (fieldType.isPrimitive()) { // 如果是基本数据类
+            // 将int boolean float等转换为对象的形式 即首字母大写
+            /*
+             * @see     java.lang.Boolean#TYPE
+             * @see     java.lang.Character#TYPE
+             * @see     java.lang.Byte#TYPE
+             * @see     java.lang.Short#TYPE
+             * @see     java.lang.Integer#TYPE
+             * @see     java.lang.Long#TYPE
+             * @see     java.lang.Float#TYPE
+             * @see     java.lang.Double#TYPE
+             * @see     java.lang.Void#TYPE
+             */
+            typeName = DaoUtil.capitalize(fieldType.getName());
+        } else {
+            typeName = fieldType.getSimpleName();
+        }
+        // 上面获取对象T的Java的get方法，如Integer String Boolean 下面需要转成SQLite里面的数据类型
+        // 如getBoolen转换为数据库的getInt getChar转换为数据库的getString
+        String methodName = "get" + typeName;
+        if ("getBoolean".equals(methodName)) {
+            methodName = "getInt";
+        } else if ("getChar".equals(methodName) || "getCharacter".equals(methodName)) {
+            methodName = "getString";
+        } else if ("getDate".equals(methodName)) {
+            methodName = "getLong";
+        } else if ("getInteger".equals(methodName)) {
+            methodName = "getInt";
+        }
+        return methodName;
+    }
 
     // obj 转成 ContentValues
     // ContentValues实际作用类似与hashMap 只不过它的value只能push基本类型
