@@ -22,7 +22,7 @@ class DaoSupport<T> implements IDaoSupport<T> {
     private SQLiteDatabase mSqLiteDatabase;
     // 数据库需要操作的 表中存储的 对象类型
     private Class<T> mClazz;
-    private String TAG = "DaoSupport";
+    private final String TAG = "DaoSupport";
 
     private static final Object[] mPutMethodArgs = new Object[2];//存储key value 如 name "hjcai"//个人觉得这个变量意义不大
     // 数据库优化 缓存数据类型 减少反射的调用次数
@@ -103,6 +103,7 @@ class DaoSupport<T> implements IDaoSupport<T> {
         return cursorToList(cursor);
     }
 
+    // 从cursor查询数据 转为list
     private List<T> cursorToList(Cursor cursor) {
         List<T> list = new ArrayList<>();
         while (cursor.moveToNext()) {
@@ -120,7 +121,7 @@ class DaoSupport<T> implements IDaoSupport<T> {
     }
 
     @Override
-    public List<T> queryAllByReflect() {
+    public List<T> queryAllByReflect() {// 使用反射查询所有
         Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, null, null, null, null, null);
         return cursorToListByReflect(cursor);
     }
@@ -179,13 +180,7 @@ class DaoSupport<T> implements IDaoSupport<T> {
                     // 第五次反射
                     field.set(instance, value);
                 }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
+            } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
             list.add(instance);
@@ -200,10 +195,10 @@ class DaoSupport<T> implements IDaoSupport<T> {
         // 根据数据类型 得到不同cursor方法
         String methodName = getColumnMethodName(type);
         // 第三次反射 根据方法名和参数类型调用
-        Method method = Cursor.class.getMethod(methodName, int.class);
-        return method;
+        return Cursor.class.getMethod(methodName, int.class);
     }
 
+    // 根据数据类型 得到不同cursor方法 如getInt getString
     private String getColumnMethodName(Class<?> fieldType) {
         String typeName;
         if (fieldType.isPrimitive()) { // 如果是基本数据类
@@ -226,14 +221,18 @@ class DaoSupport<T> implements IDaoSupport<T> {
         // 上面获取对象T的Java的get方法，如Integer String Boolean 下面需要转成SQLite里面的数据类型
         // 如getBoolen转换为数据库的getInt getChar转换为数据库的getString
         String methodName = "get" + typeName;
-        if ("getBoolean".equals(methodName)) {
-            methodName = "getInt";
-        } else if ("getChar".equals(methodName) || "getCharacter".equals(methodName)) {
-            methodName = "getString";
-        } else if ("getDate".equals(methodName)) {
-            methodName = "getLong";
-        } else if ("getInteger".equals(methodName)) {
-            methodName = "getInt";
+        switch (methodName) {
+            case "getBoolean":
+            case "getInteger":
+                methodName = "getInt";
+                break;
+            case "getChar":
+            case "getCharacter":
+                methodName = "getString";
+                break;
+            case "getDate":
+                methodName = "getLong";
+                break;
         }
         return methodName;
     }

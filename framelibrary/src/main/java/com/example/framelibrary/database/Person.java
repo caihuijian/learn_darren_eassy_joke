@@ -1,7 +1,7 @@
 package com.example.framelibrary.database;
 
 
-//该类是为了测试不使用反射而写的 写在这里是不合理的，使用反射的时候可以删除
+//该类是为了测试不使用反射进行数据库读取而写的 写在这里是不合理的，使用反射的话可以删除
 @Deprecated
 public class Person {
 
