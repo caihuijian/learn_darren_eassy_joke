@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.example.framelibrary.BaseSkinActivity;
 import com.example.framelibrary.database.DaoSupportFactory;
 import com.example.framelibrary.database.IDaoSupport;
+import com.example.framelibrary.database.QuerySupport;
 import com.example.framelibrary.http.DefaultHttpCallBack;
 import com.example.framelibrary.navigationbar.DefaultNavigationBar;
 import com.example.http.HttpUtils;
@@ -49,7 +50,7 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
             List<Person> personList = new ArrayList<>();
             long startTime = System.currentTimeMillis();
             for (int i = 0; i < totalNum; i++) {
-                personList.add(new Person("hjcai", "shanghai", i));
+                personList.add(new Person("whzhou", "shanghai" + i, i));
             }
             daoSupport.insert(personList);
             long endTime = System.currentTimeMillis();
@@ -104,28 +105,46 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
         findViewById(R.id.testMyOKHttp).setOnClickListener(this::doMyHttpRequest);
         findViewById(R.id.clearData).setOnClickListener(this::clearData);
         findViewById(R.id.queryAll).setOnClickListener(this::queryAll);
-        findViewById(R.id.queryAllReflect).setOnClickListener(this::queryAllReflect);
+        findViewById(R.id.update).setOnClickListener(this::update);
+        findViewById(R.id.deleteByArgs).setOnClickListener(this::deleteByArgs);
     }
 
-    private void queryAllReflect(View view) {
+    private void deleteByArgs(View view) {
+        QuerySupport<Person> querySupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class).querySupport();
+        List<Person> persons = querySupport.query();
+        Log.e(TAG, "删除前所有数据: " + persons);
+        // 删除所有名字为hjcai的
+        DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class).delete("name =?", "hjcai");
+
+        Log.e(TAG, "删除后所有数据: " + DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class).querySupport().query());
+    }
+
+    private void update(View view) {
         new Thread(() -> {
-            long startTime = System.currentTimeMillis();
-            IDaoSupport<Person> daoSupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class);
-            List<Person> people = daoSupport.queryAllByReflect();
-            Log.e(TAG, "queryAllReflect: " + people);
-            long endTime = System.currentTimeMillis();
-            Log.e(TAG, " queryAllReflect cost time -> " + (endTime - startTime));
+            QuerySupport<Person> querySupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class).querySupport();
+            List<Person> persons = querySupport.orderBy("age").query();
+            Log.e(TAG, "更新前: " + persons);
+            if (persons != null && persons.size() > 0) {
+                Person person = persons.get(0);
+                // 把所有name=hjcai的 更新为age最小的样子
+                DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class).update(person, "name = ?", "hjcai");
+                Log.e(TAG, " 更新后 -> " + querySupport.query());
+            }
+
         }).start();
     }
 
     private void queryAll(View view) {
         new Thread(() -> {
-            long startTime = System.currentTimeMillis();
-            IDaoSupport<Person> daoSupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class);
-            List<Person> people = daoSupport.queryAll();
+            QuerySupport<Person> querySupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class).querySupport();
+//            List<Person> people = querySupport.selection("name = ? AND age = ?").selectionArgs("hjcai","0").query();
+//            List<Person> people = querySupport.selection("name = ?").selectionArgs("hjcai").columns("name","age").query();
+//            List<Person> people = querySupport.selection("name = ?").selectionArgs("hjcai").query();
+//            List<Person> people = querySupport.selection("name = ?").selectionArgs("hjcai").limit("2").query();
+//            List<Person> people = querySupport.groupBy("name").query();
+            // 查询所有
+            List<Person> people = querySupport.query();
             Log.e(TAG, "queryAll: " + people);
-            long endTime = System.currentTimeMillis();
-            Log.e(TAG, " queryAll cost time -> " + (endTime - startTime));
         }).start();
     }
 

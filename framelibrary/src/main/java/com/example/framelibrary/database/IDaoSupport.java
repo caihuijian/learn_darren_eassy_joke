@@ -18,12 +18,15 @@ public interface IDaoSupport<T> {
     // 批量插入数据
     void insert(List<T> t);
 
-    // 查询所有
-    List<T> queryAll();
-
-    // 查询所有 使用反射
-    List<T> queryAllByReflect();
-
     void deleteAll();
+
+    // 获取专门查询的支持类 按照语句查询
+    QuerySupport<T> querySupport();
+
+    // 按照语句删除
+    int delete(String whereClause, String... whereArgs);
+
+    // 按照语句更新
+    int update(T obj, String whereClause, String... whereArgs);
 
 }
