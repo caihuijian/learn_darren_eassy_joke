@@ -19,6 +19,7 @@ public class HttpUtils {
     private int mRequestType = GET_TYPE;
     private static final int POST_TYPE = 0x0001;
     private static final int GET_TYPE = 0x0002;
+    private boolean mNeedCache;
 
     // 存放参数
     private Map<String, Object> mParams;
@@ -34,9 +35,15 @@ public class HttpUtils {
         return new HttpUtils(context);
     }
 
-    //传入url
+    // 传入url
     public HttpUtils url(String url) {
         this.mUrl = url;
+        return this;
+    }
+
+    // 是否缓存
+    public HttpUtils cache(boolean needCache) {
+        this.mNeedCache = needCache;
         return this;
     }
 
@@ -99,11 +106,11 @@ public class HttpUtils {
     }
 
     private void get(String url, Map<String, Object> params, EngineCallBack callBack) {
-        mHttpEngine.get(mContext, url, params, callBack);
+        mHttpEngine.get(mNeedCache, mContext, url, params, callBack);
     }
 
     private void post(String url, Map<String, Object> params, EngineCallBack callBack) {
-        mHttpEngine.post(mContext, url, params, callBack);
+        mHttpEngine.post(mNeedCache, mContext, url, params, callBack);
     }
 
     /**

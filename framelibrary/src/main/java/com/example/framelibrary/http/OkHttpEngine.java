@@ -1,7 +1,13 @@
-package com.example.http;
+package com.example.framelibrary.http;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
+
+import com.example.framelibrary.database.DaoSupportFactory;
+import com.example.http.EngineCallBack;
+import com.example.http.HttpUtils;
+import com.example.http.IHttpEngine;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +35,7 @@ public class OkHttpEngine implements IHttpEngine {
     private static OkHttpClient mOkHttpClient = new OkHttpClient();
 
     @Override
-    public void post(Context context, String url, Map<String, Object> params, EngineCallBack callBack) {
+    public void post(boolean needCache, Context context, String url, Map<String, Object> params, EngineCallBack callBack) {
         // 拼装参数
         final String jointUrl = HttpUtils.jointParams(url, params);
         Log.e("TAG", "post 请求Url" + jointUrl);
@@ -112,13 +118,22 @@ public class OkHttpEngine implements IHttpEngine {
 
 
     @Override
-    public void get(Context context, String url, Map<String, Object> params, EngineCallBack callBack) {
-        url = HttpUtils.jointParams(url, params);
-        Log.e(TAG, "Get请求路径：" + url);
+    public void get(boolean needCache, Context context, String urlPara, Map<String, Object> params, EngineCallBack callBack) {
+        final String finalUrl = HttpUtils.jointParams(urlPara, params);
+        // 先查询数据库看是否有缓存
+        final List<CacheData> cacheData = DaoSupportFactory.getFactoryInstance(context).getDao(CacheData.class)
+                .querySupport().selection("mUrlKey=?").selection(finalUrl).query();
 
+        if (cacheData != null && cacheData.size() > 0) {
+            // 数据库有缓存
+            CacheData cacheDatum = cacheData.get(0);
+            Log.e(TAG, "读取到缓存" + cacheDatum);
+            callBack.onSuccess(cacheDatum.getResultJson());
+        }
+        Log.e(TAG, "Get请求路径：" + finalUrl);
         Request request = new Request
                 .Builder()
-                .url(url)
+                .url(finalUrl)
                 .tag(context)
                 .build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
@@ -134,6 +149,21 @@ public class OkHttpEngine implements IHttpEngine {
                     return;
                 }
                 String resultJson = response.body().string();
+                if (cacheData != null && cacheData.size() > 0) {
+                    CacheData cacheDatum = cacheData.get(0);
+                    if (!TextUtils.isEmpty(resultJson) && cacheDatum != null && resultJson.equals(cacheDatum.getResultJson())) {
+                        // 缓存与网络查询结果相等 直接使用缓存
+                        return;
+                    } else {
+                        if (needCache) {
+                            //更新缓存
+                            DaoSupportFactory.getFactoryInstance(context).getDao(CacheData.class)
+                                    .delete("mUrlKey=?", finalUrl);
+                            DaoSupportFactory.getFactoryInstance(context).getDao(CacheData.class)
+                                    .insert(new CacheData(finalUrl, resultJson));
+                        }
+                    }
+                }
                 callBack.onSuccess(resultJson);
                 Log.e("Get返回结果：", resultJson);
             }
