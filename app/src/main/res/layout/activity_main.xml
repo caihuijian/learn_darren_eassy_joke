@@ -55,4 +55,9 @@
         android:layout_height="wrap_content"
         android:text="删除指定" />
 
+    <ImageView
+        android:id="@+id/emptyImg"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
 </LinearLayout>

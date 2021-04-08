@@ -1,11 +1,17 @@
 package com.example.learneassyjoke;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +28,11 @@ import com.example.http.HttpUtils;
 import com.example.ioc.ViewById;
 import com.example.ioc.ViewUtils;
 import com.example.learneassyjoke.model.Person;
+import com.example.learneassyjoke.utils.Util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.lang.reflect.Method;
 import java.util.List;
 
 
@@ -45,7 +52,7 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
     protected void initData() {
         IDaoSupport<Person> daoSupport = DaoSupportFactory.getFactoryInstance(MainActivity.this).getDao(Person.class);
         // 最少的知识原则
-        new Thread(() -> {
+        /*new Thread(() -> {
             int totalNum = 10;
             List<Person> personList = new ArrayList<>();
             long startTime = System.currentTimeMillis();
@@ -55,7 +62,7 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
             daoSupport.insert(personList);
             long endTime = System.currentTimeMillis();
             Log.e(TAG, " insert " + totalNum + " cost time -> " + (endTime - startTime));
-        }).start();
+        }).start();*/
         //AliFix();
     }
 
@@ -80,7 +87,52 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
 
     @Override
     protected void initView() {
+        Util.checkAndRequestReadSDCardPermission(this);
+        loadImg();
+    }
 
+    private void loadImg() {
+        try {
+            ImageView img = findViewById(R.id.emptyImg);
+            // 读取本地的一个 .skin里面的资源
+            Resources superRes = getResources();
+            // 创建AssetManager
+            AssetManager assetManager = AssetManager.class.newInstance();
+            // 寻找hide的方法
+            Method method = AssetManager.class.getDeclaredMethod("addAssetPath", String.class);
+            // method.setAccessible(true); 如果是私有的
+            Log.e(TAG, "loadImg from : " + Environment.getExternalStorageDirectory().getAbsolutePath() +
+                    File.separator + "test.skin");
+            // 反射执行方法 assetManager指向指定的皮肤包 /storage/emulated/0/test.skin
+            method.invoke(assetManager, Environment.getExternalStorageDirectory().getAbsolutePath() +
+                    File.separator + "test.skin");
+
+            Resources resource = new Resources(assetManager, superRes.getDisplayMetrics(),
+                    superRes.getConfiguration());
+
+            // 获取指定路径apk的packageName
+            String packageName = "";
+            if (this.getApplication() != null) {
+                Log.e(TAG, "loadImage: getApplication!=null");
+                if (this.getApplication().getPackageManager() != null) {
+                    String myPath = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                            File.separator + "test.skin";
+                    Log.e(TAG, "loadImage: myPath ===" + myPath);
+                    packageName = this.getApplication().getPackageManager().getPackageArchiveInfo(Environment.getExternalStorageDirectory().getAbsolutePath() +
+                            File.separator + "test.skin", PackageManager.GET_ACTIVITIES).packageName;
+                } else {
+                    Log.e(TAG, "loadImage: getPackageManager==null");
+                }
+            }
+
+            // 获取资源 id
+            int drawableId = resource.getIdentifier("abc", "drawable", packageName);
+            Drawable drawable = resource.getDrawable(drawableId);
+            img.setImageDrawable(drawable);
+        } catch (Exception e) {
+            Log.e(TAG, "loadImg: " + e.getStackTrace().toString());
+            e.printStackTrace();
+        }
     }
 
     @Override
