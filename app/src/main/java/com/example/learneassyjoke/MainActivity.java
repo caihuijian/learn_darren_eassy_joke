@@ -163,6 +163,12 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
         findViewById(R.id.queryAll).setOnClickListener(this::queryAll);
         findViewById(R.id.update).setOnClickListener(this::update);
         findViewById(R.id.deleteByArgs).setOnClickListener(this::deleteByArgs);
+        findViewById(R.id.testChangeSkin).setOnClickListener(this::jumpChangeSkin);
+    }
+
+    private void jumpChangeSkin(View view) {
+        Intent intent = new Intent(MainActivity.this, ActivityChangeSkin.class);
+        startActivity(intent);
     }
 
     private void deleteByArgs(View view) {
