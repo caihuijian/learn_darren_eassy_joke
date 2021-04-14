@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +47,9 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        View layoutView = View.inflate(this,R.layout.activity_main,null);
+//        layoutView = LayoutInflater.from(this).inflate(R.layout.activity_main,null);
+//        layoutView = LayoutInflater.from(this).inflate(R.layout.activity_main,null,false);
     }
 
     @Override
