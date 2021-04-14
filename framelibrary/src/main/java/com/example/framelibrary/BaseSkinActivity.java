@@ -38,6 +38,7 @@ public abstract class BaseSkinActivity extends BaseActivity {
             @Override
             public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
                 //在这里拦截view创建
+                //可以在这里进行换肤
                 Log.e(TAG, "onCreateView: 拦截了view " + name);
                 View view = null;
                 switch (name) {
@@ -49,7 +50,7 @@ public abstract class BaseSkinActivity extends BaseActivity {
                         break;
                     case "Button":
                         view = new AppCompatButton(context, attrs);
-                        ((Button) view).setText("拦截");
+                        //((Button) view).setText("拦截");
                         break;
                     case "EditText":
                         view = new AppCompatEditText(context, attrs);
