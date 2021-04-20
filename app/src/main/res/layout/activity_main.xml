@@ -1,69 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ActivityButterKnifeTest">
 
-    <TextView
-        android:id="@+id/tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        <EditText
 
-    <Button
-        android:id="@+id/testOKHttp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="测试OKHttp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="请输入内容"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/text_hint" />
 
-    <Button
-        android:id="@+id/testMyOKHttp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="测试自己框架的OKHttp" />
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello World!"
+            android:textColor="@color/text_color" />
 
-    <Button
-        android:id="@+id/clearData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="清除数据" />
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/button_bg"
+            android:text="Hello World!"
+            android:textColor="@color/button_text" />
 
-    <Button
-        android:id="@+id/queryAll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="查询所有" />
+        <Button
+            android:id="@+id/testOKHttp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/button_bg"
+            android:text="测试OKHttp"
+            android:textColor="@color/button_text" />
 
-    <Button
-        android:id="@+id/update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="更新" />
+        <Button
+            android:id="@+id/testMyOKHttp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/button_bg"
+            android:text="测试自己框架的OKHttp"
+            android:textColor="@color/button_text" />
 
-    <Button
-        android:id="@+id/deleteByArgs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="删除指定" />
+        <Button
+            android:id="@+id/clearData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/button_bg"
+            android:text="清除数据"
+            android:textColor="@color/button_text" />
 
-    <ImageView
-        android:id="@+id/emptyImg"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+        <Button
+            android:id="@+id/queryAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/button_bg"
+            android:text="查询所有"
+            android:textColor="@color/button_text" />
 
-    <Button
-        android:id="@+id/testChangeSkin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="跳转换肤" />
+        <Button
+            android:id="@+id/update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/button_bg"
+            android:text="更新"
+            android:textColor="@color/button_text" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/deleteByArgs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/button_bg"
+            android:text="删除指定"
+            android:textColor="@color/button_text" />
+
+        <ImageView
+            android:id="@+id/emptyImg"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@mipmap/ic_launcher"
+            android:src="@drawable/abc" />
+
+        <Button
+            android:id="@+id/testChangeSkin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/button_bg"
+            android:text="跳转换肤"
+            android:textColor="@color/button_text" />
+    </LinearLayout>
+</ScrollView>

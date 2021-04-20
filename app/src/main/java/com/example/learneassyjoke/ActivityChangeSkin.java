@@ -1,6 +1,5 @@
 package com.example.learneassyjoke;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +7,8 @@ import android.widget.Toast;
 
 import com.example.framelibrary.BaseSkinActivity;
 import com.example.framelibrary.navigationbar.DefaultNavigationBar;
+import com.example.framelibrary.skin.SkinManager;
+import com.example.framelibrary.skin.support.SkinPathUtil;
 
 public class ActivityChangeSkin extends BaseSkinActivity {
 
@@ -43,8 +44,10 @@ public class ActivityChangeSkin extends BaseSkinActivity {
     }
 
     public void changeSkin(View view) {
+        SkinManager.getInstance().loadSkin(SkinPathUtil.getLightSkinPath());
     }
 
     public void restoreSkin(View view) {
+        SkinManager.getInstance().restoreDefault();
     }
 }

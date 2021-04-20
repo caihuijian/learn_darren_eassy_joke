@@ -8,6 +8,8 @@
     tools:context=".ActivityChangeSkin">
 
     <Button
+        android:background="@color/button_bg"
+        android:textColor="@color/button_text"
         android:id="@+id/changeSkin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,6 +17,8 @@
         android:text="换肤" />
 
     <Button
+        android:background="@color/button_bg"
+        android:textColor="@color/button_text"
         android:id="@+id/restoreSkin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

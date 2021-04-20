@@ -8,6 +8,7 @@ import android.util.Log;
 import com.alipay.euler.andfix.patch.PatchManager;
 import com.example.cachebug.ExceptionCrashHandler;
 import com.example.fixBug.FixDexManager;
+import com.example.framelibrary.skin.SkinManager;
 
 
 public class BaseApplication extends Application {
@@ -22,6 +23,8 @@ public class BaseApplication extends Application {
         ExceptionCrashHandler.getInstance().init(this);
         //AliFix();
         fixDexBug();
+        // 初始化皮肤管理器
+        SkinManager.getInstance().init(this);
     }
 
     private void AliFix() {
