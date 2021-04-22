@@ -18,10 +18,14 @@ import androidx.core.view.ViewCompat;
 
 import com.example.base.BaseActivity;
 import com.example.framelibrary.skin.SkinManager;
+import com.example.framelibrary.skin.SkinResource;
 import com.example.framelibrary.skin.attr.SkinAttr;
 import com.example.framelibrary.skin.attr.SkinView;
+import com.example.framelibrary.skin.callback.ISkinChangeListener;
 import com.example.framelibrary.skin.support.SkinAppCompatViewInflater;
 import com.example.framelibrary.skin.support.SkinAttrSupport;
+import com.example.framelibrary.skin.support.SkinConfig;
+import com.example.framelibrary.skin.support.SkinUtil;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -31,7 +35,7 @@ import java.util.List;
 /**
  * Created by hjcai on 2021/2/18.
  */
-public abstract class BaseSkinActivity extends BaseActivity {
+public abstract class BaseSkinActivity extends BaseActivity implements ISkinChangeListener {
     private static final String TAG = "BaseSkinActivity";
     private SkinAppCompatViewInflater mAppCompatViewInflater;
 
@@ -60,6 +64,8 @@ public abstract class BaseSkinActivity extends BaseActivity {
                     SkinView skinView = new SkinView(view, skinAttrs);
                     // 3.交给SkinManager统一存储管理
                     managerSkinView(skinView);
+                    // 4.换肤
+                    skinView.applySkin();
                 }
 
                 return view;
@@ -156,5 +162,16 @@ public abstract class BaseSkinActivity extends BaseActivity {
             }
             parent = parent.getParent();
         }
+    }
+
+    @Override
+    public void changeSkin(SkinResource skinResource) {
+        Log.e(TAG, "changeSkin: in base activity ");
+    }
+
+    @Override
+    protected void onDestroy() {// 避免内存泄漏
+        super.onDestroy();
+        SkinManager.getInstance().unCache(this);
     }
 }

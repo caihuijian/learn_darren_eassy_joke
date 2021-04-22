@@ -81,6 +81,10 @@ public class SkinResource {
         try {
             int resId = mSkinResource.getIdentifier(resName, "drawable", mPackageName);
             Log.e(TAG, "resId -> " + resId + " mPackageName -> " + mPackageName + " resName -> " + resName);
+            if (resId <= 0) {
+                Log.e(TAG, "didn't get drawable");
+                return null;
+            }
             return mSkinResource.getDrawableForDensity(resId, 0, null);
         } catch (Exception e) {
             e.printStackTrace();

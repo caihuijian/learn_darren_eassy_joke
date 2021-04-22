@@ -25,4 +25,13 @@
         android:onClick="restoreSkin"
         android:text="恢复默认皮肤" />
 
+    <Button
+        android:background="@color/button_bg"
+        android:textColor="@color/button_text"
+        android:id="@+id/jumpActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jumpActivity"
+        android:text="跳转" />
+
 </LinearLayout>
