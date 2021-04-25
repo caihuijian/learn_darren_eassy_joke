@@ -1,3 +1,5 @@
+include ':AIDLClient'
+include ':AIDLserver'
 include ':lightSkin'
 include ':framelibrary'
 include ':baseLibrary'

@@ -12,6 +12,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/AIDLClient" />
+            <option value="$PROJECT_DIR$/AIDLserver" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/baseLibrary" />
             <option value="$PROJECT_DIR$/framelibrary" />
