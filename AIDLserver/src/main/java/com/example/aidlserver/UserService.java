@@ -30,11 +30,13 @@ public class UserService extends Service {
     private final IUserCalc.Stub mBinder = new IUserCalc.Stub() {
         @Override
         public String getUserName() throws RemoteException {
+            Log.e(TAG, "getUserName: ");
             return "hjcai";
         }
 
         @Override
         public String getUserPassword() throws RemoteException {
+            Log.e(TAG, "getUserPassword: ");
             return "12341234";
         }
     };
