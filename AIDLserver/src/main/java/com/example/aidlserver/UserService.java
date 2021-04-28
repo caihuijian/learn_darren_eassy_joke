@@ -30,6 +30,7 @@ public class UserService extends Service {
     private final IUserCalc.Stub mBinder = new IUserCalc.Stub() {
         @Override
         public String getUserName() throws RemoteException {
+            Log.e("hjcai", Log.getStackTraceString(new Throwable()));
             Log.e(TAG, "getUserName: ");
             return "hjcai";
         }

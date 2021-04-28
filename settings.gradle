@@ -1,3 +1,4 @@
+include ':ProcessGaurd'
 include ':AIDLClient'
 include ':AIDLserver'
 include ':lightSkin'
