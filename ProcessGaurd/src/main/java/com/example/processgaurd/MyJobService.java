@@ -21,6 +21,8 @@ import java.util.List;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MyJobService extends JobService {
     private static final int JOB_WAKE_UP_ID = 0x11;
+    JobScheduler jobScheduler;
+    int jobId;
 
     // 服务启动
     @Override
@@ -38,9 +40,9 @@ public class MyJobService extends JobService {
             jobBuilder.setPeriodic(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS);
         }
 
-        JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobBuilder.setPersisted(true);  // 设置设备重启时，执行该任务
-        jobScheduler.schedule(jobBuilder.build());
+        jobId = jobScheduler.schedule(jobBuilder.build());
         return START_STICKY;
     }
 
@@ -54,7 +56,16 @@ public class MyJobService extends JobService {
         if (!messageServiceAlive) {
             startForegroundService(new Intent(this, GuardService.class));
         }
-        jobFinished(params, true);
+
+        boolean messageServiceAlive2 = serviceAlive(MainService.class.getName());
+        if (!messageServiceAlive2) {
+            startForegroundService(new Intent(this, MainService.class));
+        }
+
+        jobFinished(params, false);
+        // jobScheduler.cancel(jobId); //取消指定定时任务
+        // jobScheduler.cancelAll(); //取消所有指定定时任务
+
         // Return true from this method if your job needs to continue running,the job remains active until you call jobFinished(android.app.job.JobParameters, boolean)
         return true;
     }

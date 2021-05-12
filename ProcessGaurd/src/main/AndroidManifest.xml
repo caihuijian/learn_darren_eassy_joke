@@ -28,6 +28,7 @@
         <service
             android:name=".MyJobService"
             android:enabled="true"
+            android:process=":jobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
     </application>
