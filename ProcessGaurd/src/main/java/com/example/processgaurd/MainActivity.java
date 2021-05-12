@@ -21,4 +21,8 @@ public class MainActivity extends AppCompatActivity {
     public void startRemoteService(View view) {
         startService(new Intent(this, GuardService.class));
     }
+
+    public void startJobService(View view) {
+        startService(new Intent(this, MyJobService.class));
+    }
 }
