@@ -1,6 +1,7 @@
 package com.example.testrecyclerview;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,9 +28,9 @@ public class MainActivity extends AppCompatActivity {
         }
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(users, this, this.getLayoutInflater());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new RecyclerViewItemDecoration(Color.GREEN, 15, layoutManager.getOrientation()));
+        recyclerView.addItemDecoration(new RecyclerViewItemDecoration(ContextCompat.getDrawable(this, R.drawable.recycler_view_divider), layoutManager.getOrientation()));
         recyclerView.setAdapter(adapter);
     }
 }
