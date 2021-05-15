@@ -2,6 +2,7 @@ package com.example.testrecyclerview;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,9 +29,10 @@ public class MainActivity extends AppCompatActivity {
         }
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(users, this, this.getLayoutInflater());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(RecyclerView.VERTICAL);
+        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new RecyclerViewItemDecoration(ContextCompat.getDrawable(this, R.drawable.recycler_view_divider), layoutManager.getOrientation()));
+//        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        recyclerView.addItemDecoration(new RecyclerViewItemDecoration(ContextCompat.getDrawable(this, R.drawable.recycler_view_divider_h), layoutManager.getOrientation()));
         recyclerView.setAdapter(adapter);
     }
 }
