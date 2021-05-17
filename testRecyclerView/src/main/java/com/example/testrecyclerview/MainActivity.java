@@ -2,15 +2,11 @@ package com.example.testrecyclerview;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.Adapter;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +25,11 @@ public class MainActivity extends AppCompatActivity {
         }
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(users, this, this.getLayoutInflater());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 //        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-        recyclerView.addItemDecoration(new RecyclerViewItemDecoration(ContextCompat.getDrawable(this, R.drawable.recycler_view_divider_h), layoutManager.getOrientation()));
+        recyclerView.addItemDecoration(new RecyclerViewItemDecoration(ContextCompat.getDrawable(this, R.drawable.recycler_view_divider), layoutManager.getOrientation()));
+        adapter.setItemClickListener((position, holder) -> Toast.makeText(MainActivity.this, holder.mLeftTv.getText().toString() + " " + position, Toast.LENGTH_SHORT).show());
         recyclerView.setAdapter(adapter);
     }
 }

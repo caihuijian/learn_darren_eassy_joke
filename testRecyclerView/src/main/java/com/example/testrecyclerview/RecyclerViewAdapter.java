@@ -22,6 +22,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private final List<User> mList;
     private final Context mContext;
     private final LayoutInflater mInflater;
+    public OnItemClickListener mItemClickListener;
 
     // constructor
     public RecyclerViewAdapter(List<User> list, Context context, LayoutInflater inflater) {
@@ -53,8 +54,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.mLeftTv.setText(user.getUserName());
         holder.mRightTv.setText(String.valueOf(user.getAge()));
 
+        if (mItemClickListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mItemClickListener.onItemClick(position, holder);
+                }
+            });
+        }
         // 加载图片
-        // holder.mImage.layout(0,0,0,0);
         Glide.with(mContext).load(user.getImageUrl())
                 .placeholder(R.mipmap.ic_launcher)
                 .centerCrop()
@@ -77,5 +85,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             mRightTv = itemView.findViewById(R.id.rightTv);
             mImage = itemView.findViewById(R.id.image);
         }
+    }
+
+    public void setItemClickListener(OnItemClickListener itemClickListener) {
+        this.mItemClickListener = itemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        public void onItemClick(int position, ViewHolder holder);
     }
 }
