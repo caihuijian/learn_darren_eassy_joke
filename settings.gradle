@@ -1,3 +1,4 @@
+include ':TestJni'
 include ':ProcessGaurd'
 include ':AIDLClient'
 include ':AIDLserver'
