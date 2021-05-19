@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -14,10 +15,29 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
+    // Used to load the 'native-lib' library on application startup.
+    static {
+        System.loadLibrary("native-lib");
+        System.loadLibrary("native-mylib");
+    }
+
+    public native String myStringFromJNI();
+
+    public native String stringFromJNI();
+
+    public native String testString1();
+
+    public native String testString2();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TextView tv = findViewById(R.id.test);
+        tv.setText(myStringFromJNI() + stringFromJNI() + testString1() + testString2());
+
         recyclerView = findViewById(R.id.recycler);
         List<User> users = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
