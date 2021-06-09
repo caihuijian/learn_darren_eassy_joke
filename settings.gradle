@@ -1,5 +1,5 @@
 include ':testproxy'
-include ':TestJni'
+include ':TestFragment'
 include ':ProcessGaurd'
 include ':AIDLClient'
 include ':AIDLserver'
