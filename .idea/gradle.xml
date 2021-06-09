@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/baseLibrary" />
             <option value="$PROJECT_DIR$/framelibrary" />
+            <option value="$PROJECT_DIR$/hookstartactivity" />
             <option value="$PROJECT_DIR$/lightSkin" />
             <option value="$PROJECT_DIR$/testRecyclerView" />
             <option value="$PROJECT_DIR$/testproxy" />
