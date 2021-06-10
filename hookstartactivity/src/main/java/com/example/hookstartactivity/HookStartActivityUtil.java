@@ -1,6 +1,7 @@
 package com.example.hookstartactivity;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
@@ -17,8 +18,6 @@ public class HookStartActivityUtil {
         mContext = context;
         mTempClazz = tempClazz;
     }
-    // 思路：在startActivity的时候 使用已经注册清单文件的空壳Activity通过startActivity时的检测
-    // 在lunchActivity时 替换掉空壳activity 使用真正想要打开的activity
 
     public static void hookStartActivity() throws Exception {
 
@@ -28,19 +27,26 @@ public class HookStartActivityUtil {
         // 在第一步中 我们需要先使用临时的空壳activity的intent来通过检测
         // 在第二步中 我们需要取出handleMessage里面我们塞进去的壳activity的intent 替换为我们真正想要启动的activity的intent
 
-
+        /* 以下仅仅涉及第一步 大致思路
+         * 我们需要拦截IActivityManager原先实现者的startActivity方法
+         * IActivityManager的原先实现者是android.util.Singleton里面的mInstance对象
+         * 因此我们的核心是取得mInstance对象
+         * 取得过程：
+         * 反射android.app.ActivityManager对象 取得其中的IActivityManagerSingleton对象
+         * 再从IActivityManagerSingleton中取得mInstance对象
+         */
         try {
-            // 找到IActivityManager的原先的实现者 我们需要拦截它的startActivity方法 并替换他内部的的一个intent变量
-            // 因此首先要拿到IActivityManager的原先的实现者
-
+            // 1.反射android.app.ActivityManager对象 取得其中的IActivityManagerSingleton对象
+            Object defaultSingleton = getIActivityManagerSingleton();
+            if (defaultSingleton == null) {
+                Log.e(TAG, "hookStartActivity: failed");
+                return;
+            }
             // 反射android.util.Singleton对象
             Class<?> singletonClazz = Class.forName("android.util.Singleton");
-            // 从其中获取mInstance的变量
+            // 2.从IActivityManagerSingleton中取得mInstance对象
             Field instanceField = singletonClazz.getDeclaredField("mInstance");
             instanceField.setAccessible(true);
-            // 获取defaultSingleton中IActivityManager类型的mInstance成员变量
-            Object defaultSingleton = getIActivityManagerSingleton();
-            // 从mInstance中获取defaultSingleton 即IActivityManager的实现者
             Object activityManagerInstance = instanceField.get(defaultSingleton);// mInstance不是静态变量 需要从具体实例中获取对象 这里是defaultSingleton获取
 
             // Proxy 的三个参数
@@ -52,7 +58,6 @@ public class HookStartActivityUtil {
             Object proxy = Proxy.newProxyInstance(HookStartActivityUtil.class.getClassLoader(),
                     new Class[]{interfaceActivityManager},
                     new HookInvocationHandler(activityManagerInstance));
-
             //替换为代理类IActivityManagerProxy
             instanceField.set(defaultSingleton, proxy);
         } catch (ClassNotFoundException e) {
