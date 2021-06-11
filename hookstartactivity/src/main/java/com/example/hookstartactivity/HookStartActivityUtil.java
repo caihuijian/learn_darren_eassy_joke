@@ -1,6 +1,7 @@
 package com.example.hookstartactivity;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import java.lang.reflect.Field;
@@ -77,6 +78,26 @@ public class HookStartActivityUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void hookLaunchActivity() throws Exception {
+        try {
+            Class<?> activityThreadClazz = Class.forName("android.app.ActivityThread");
+            Field currentActivityThreadField = activityThreadClazz.getDeclaredField("sCurrentActivityThread");
+            currentActivityThreadField.setAccessible(true);
+            Object currentActivityThread = currentActivityThreadField.get(null);
+
+            Field handlerField = activityThreadClazz.getDeclaredField("mH");
+            handlerField.setAccessible(true);
+            Handler mH = (Handler) handlerField.get(currentActivityThread);
+
+            Field callbackField = Handler.class.getDeclaredField("mCallback");
+            callbackField.setAccessible(true);
+            //Handler的mCallback替换为CallBackProxy
+            callbackField.set(mH, new CallBackProxy(mH));
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
 }

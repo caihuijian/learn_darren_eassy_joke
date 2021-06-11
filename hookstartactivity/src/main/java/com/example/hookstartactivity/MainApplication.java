@@ -14,6 +14,7 @@ public class MainApplication extends Application {
                 new HookStartActivityUtil(this, TempActivity.class);
         try {
             hookStartActivityUtil.hookStartActivity();
+            hookStartActivityUtil.hookLaunchActivity();
         } catch (Exception e) {
             e.printStackTrace();
         }

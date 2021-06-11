@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
  */
 public class HookInvocationHandler implements InvocationHandler {
     private static final String TAG = "HookInvocationHandler";
-    private static final String REQUEST_TARGET_INTENT_KEY = "REQUEST_TARGET_INTENT_KEY";
+    public static final String REQUEST_TARGET_INTENT_KEY = "REQUEST_TARGET_INTENT_KEY";
     // 代理ActivityManager
     private final Object mActivityManager;
 
