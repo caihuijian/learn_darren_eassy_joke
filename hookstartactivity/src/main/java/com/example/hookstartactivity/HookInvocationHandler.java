@@ -8,6 +8,8 @@ import java.lang.reflect.Method;
 
 /**
  * Created by hjcai on 2021/6/10.
+ * <p>
+ * 拦截startActivity方法 达到偷梁的目的
  */
 public class HookInvocationHandler implements InvocationHandler {
     private static final String TAG = "HookInvocationHandler";

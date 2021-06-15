@@ -10,6 +10,8 @@ import static com.example.hookstartactivity.HookInvocationHandler.REQUEST_TARGET
 
 /**
  * Created by hjcai on 2021/6/11.
+ * <p>
+ * 在launchActivity前拦住 达到换柱的目的
  */
 public class CallBackProxy implements Handler.Callback {
 
@@ -34,6 +36,7 @@ public class CallBackProxy implements Handler.Callback {
                 if (targetIntent == null) {
                     return false;
                 }
+                // 借尸还魂中的还魂
                 intent.setComponent(targetIntent.getComponent());
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
