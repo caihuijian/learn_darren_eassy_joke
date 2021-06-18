@@ -10,3 +10,4 @@ include ':baseLibrary'
 include ':testRecyclerView'
 include ':app'
 rootProject.name = "LearnEassyJoke"
+include ':hotupdate'

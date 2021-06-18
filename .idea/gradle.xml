@@ -20,13 +20,13 @@
             <option value="$PROJECT_DIR$/baseLibrary" />
             <option value="$PROJECT_DIR$/framelibrary" />
             <option value="$PROJECT_DIR$/hookstartactivity" />
+            <option value="$PROJECT_DIR$/hotupdate" />
             <option value="$PROJECT_DIR$/lightSkin" />
             <option value="$PROJECT_DIR$/testRecyclerView" />
             <option value="$PROJECT_DIR$/testproxy" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
-        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
   </component>
