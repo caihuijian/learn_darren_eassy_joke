@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     static {
         System.loadLibrary("native-lib");
         System.loadLibrary("native-mylib");
+        System.loadLibrary("native-myclib");
     }
 
     public native String myStringFromJNI();
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     public native String testString2();
 
+    public native String testCString();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         TextView tv = findViewById(R.id.test);
-        tv.setText(myStringFromJNI() + stringFromJNI() + testString1() + testString2());
+        tv.setText(myStringFromJNI() + stringFromJNI() + testString1() + testCString());
 
         recyclerView = findViewById(R.id.recycler);
         List<User> users = new ArrayList<>();
