@@ -5,7 +5,7 @@ plugins {
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.3"
-    ndkPath "C:\\codebase\\android-sdk_60_windows\\ndk\\20.0.5594570"
+    ndkPath "20.0.5594570"
 
     defaultConfig {
         applicationId "com.example.testrecyclerview"

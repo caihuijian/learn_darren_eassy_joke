@@ -7,7 +7,7 @@ include ':AIDLserver'
 include ':lightSkin'
 include ':framelibrary'
 include ':baseLibrary'
-//include ':testRecyclerView'
+include ':testRecyclerView'
 include ':app'
 rootProject.name = "LearnEassyJoke"
 include ':hotupdate'

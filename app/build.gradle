@@ -7,7 +7,7 @@ plugins {
 android {
     signingConfigs {
         release {
-            storeFile file('D:\\test Darren\\learn_darren_eassy_joke\\joke.jks')
+            storeFile file('joke.jks')
             storePassword '12345678'
             keyAlias 'joke'
             keyPassword '12345678'

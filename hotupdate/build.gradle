@@ -6,7 +6,7 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
     // 指定ndk下载路径
-    ndkPath "C:\\codebase\\android-sdk_60_windows\\ndk\\20.0.5594570"
+    ndkPath "20.0.5594570"
 
     defaultConfig {
         applicationId "com.example.hotupdate"
