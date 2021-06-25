@@ -5,7 +5,7 @@ plugins {
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
-    // 指定ndk下载路径
+    // 指定ndk路径
     ndkPath "20.0.5594570"
 
     defaultConfig {
