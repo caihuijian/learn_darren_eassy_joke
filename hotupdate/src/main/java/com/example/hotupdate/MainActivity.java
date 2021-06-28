@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
             + File.separator + "1_2.patch";
 
     private String mNewApkPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            + File.separator + "2.0.apk";
+            + File.separator + "new.apk";
 
     protected void hotUpdate() {
         // 1.使用当前版本查询是否需要更新
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         // 是一个耗时操作，怎么弄 开线程+，Handler, AsyncTask , RXJava
         // 本地apk路径怎么来，已经被安装了  1.0
         // 获取本地的getPackageResourcePath()apk路径
-        if (!new File(mPatchPath).exists()) {// TODO 这里有问题！！！！！！！
+        if (!new File(mPatchPath).exists()) {
             Log.e(TAG, "hotUpdate: mPatchPath doesn't exist");
             return;
         }
@@ -52,9 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
         installAPK();
         Log.e(TAG, "hotUpdate: installed APK");
-        // 7.删除最新版本临时apk
-        delFile(mNewApkPath);
-        Log.e(TAG, "hotUpdate: new apk deleted");
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
 //        intent.setDataAndType(Uri.fromFile(new File(mNewApkPath)),
 //                "application/vnd.android.package-archive");

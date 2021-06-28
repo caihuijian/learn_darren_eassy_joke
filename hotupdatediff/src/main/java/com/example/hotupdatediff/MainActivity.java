@@ -1,18 +1,27 @@
 package com.example.hotupdatediff;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity {
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+public class MainActivity extends AppCompatActivity {
+    //TODO 1.permission 2.so of C
+
+    private static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 1;
+    private static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1;
     private String mPatchPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             + File.separator + "1_2.patch";
 
@@ -26,28 +35,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        if (!checkPermission(READ_EXTERNAL_STORAGE)) {
+            requestPermission(this, READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_REQUEST_CODE);
+        }
+        if (!checkPermission(WRITE_EXTERNAL_STORAGE)) {
+            requestPermission(this, WRITE_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+        }
     }
 
-//    if (ContextCompat.checkSelfPermission(
-//    CONTEXT, Manifest.permission.REQUESTED_PERMISSION) ==
-//    PackageManager.PERMISSION_GRANTED) {
-//        // You can use the API that requires the permission.
-//        performAction(...);
-//    } else if (shouldShowRequestPermissionRationale(...)) {
-//        // In an educational UI, explain to the user why your app requires this
-//        // permission for a specific feature to behave as expected. In this UI,
-//        // include a "cancel" or "no thanks" button that allows the user to
-//        // continue using your app without granting the permission.
-//        showInContextUI(...);
-//    } else {
-//        // You can directly ask for the permission.
-//        // The registered ActivityResultCallback gets the result of this request.
-//        requestPermissionLauncher.launch(
-//                Manifest.permission.REQUESTED_PERMISSION);
-//    }
+    public void requestPermission(Activity activity, String permission, int requestCode) {
+        //第一次申请权限被拒后每次进入activity就会调用，或者用户之前允许了，之后又在设置中去掉了该权限
+        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
+            Toast.makeText(activity, permission + " permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(activity, new String[]{permission}, requestCode);
+        }
+    }
+
+    public boolean checkPermission(String permission) {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), permission);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
 
     public void diff(View view) {
+        if (!new File(mOldApkPath).exists()) {
+            Toast.makeText(MainActivity.this, "hotUpdateDiff: mOldApkPath doesn't exist", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!new File(mNewApkPath).exists()) {
+            Toast.makeText(MainActivity.this, "hotUpdateDiff: mNewApkPath doesn't exist", Toast.LENGTH_SHORT).show();
+            return;
+        }
         DiffUtils.diff(mOldApkPath, mNewApkPath, mPatchPath);
     }
 }
