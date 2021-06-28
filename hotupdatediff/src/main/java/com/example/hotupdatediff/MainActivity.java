@@ -18,10 +18,9 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
-    //TODO 1.permission 2.so of C
 
     private static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 1;
-    private static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1;
+    private static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 2;
     private String mPatchPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             + File.separator + "1_2.patch";
 
