@@ -65,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "hotUpdateDiff: mNewApkPath doesn't exist", Toast.LENGTH_SHORT).show();
             return;
         }
-        DiffUtils.diff(mOldApkPath, mNewApkPath, mPatchPath);
+
+        Thread thread = new Thread(() -> {
+            DiffUtils.diff(mOldApkPath, mNewApkPath, mPatchPath);
+            view.post(() -> {
+                Toast.makeText(MainActivity.this, "patch 生成完毕", Toast.LENGTH_SHORT).show();
+            });
+        });
+        thread.start();
     }
 }

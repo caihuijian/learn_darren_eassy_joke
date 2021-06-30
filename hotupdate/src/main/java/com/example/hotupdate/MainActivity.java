@@ -41,14 +41,14 @@ public class MainActivity extends AppCompatActivity {
         // b 下载全部apk
 
         // 3.下载完差分包之后, 调用native方法去合并生成新的apk
-        // 是一个耗时操作，怎么弄 开线程+，Handler, AsyncTask , RXJava
-        // 本地apk路径怎么来，已经被安装了  1.0
+        // 是一个耗时操作 开线程, Handler, AsyncTask 这里就不开线程了
         // 获取本地的getPackageResourcePath()apk路径
         if (!new File(mPatchPath).exists()) {
             Log.e(TAG, "hotUpdate: mPatchPath doesn't exist");
             return;
         }
-        String oldApkPath = getPackageResourcePath();
+        // 本地apk路径怎么来,已经被安装了  1.0
+        String oldApkPath = getPackageResourcePath();//获取当前apk的路径
         // 需要申请sdcard读写权限
         PatchUtils.combine(oldApkPath, mNewApkPath, mPatchPath);
         // 4.删除patch
@@ -59,13 +59,13 @@ public class MainActivity extends AppCompatActivity {
         // 5.需要校验签名    就是获取本地apk的签名，与我们新版本的apk作对比
 
         // 6.安装最新版本
-
-        installAPK();
-        Log.e(TAG, "hotUpdate: installed APK");
+// Android 6.0左右安装apk的方法
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
 //        intent.setDataAndType(Uri.fromFile(new File(mNewApkPath)),
 //                "application/vnd.android.package-archive");
 //        startActivity(intent);
+        installAPK();
+        Log.e(TAG, "hotUpdate: installed APK");
     }
 
     private void installAPK() {
