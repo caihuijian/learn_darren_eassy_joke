@@ -69,24 +69,24 @@ public class MainActivity extends BaseSkinActivity implements View.OnClickListen
         //AliFix();
     }
 
-    private void AliFix() {
-        // 测试 ,直接获取内部存储里面的 fix.aptach
-        File fixFile = new File(MainActivity.this.getFilesDir(), "fix.apatch");
-
-        if (fixFile.exists()) {
-            // 修复Bug
-            try {
-                // 立马生效不需要重启
-                BaseApplication.mPatchManager.addPatch(fixFile.getAbsolutePath());
-                Log.e(TAG, "initData: 修复成功");
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e(TAG, "initData: 修复失败");
-            }
-        } else {
-            Log.e(TAG, "没有找到apatch补丁文件 " + fixFile);
-        }
-    }
+//    private void AliFix() {
+//        // 测试 ,直接获取内部存储里面的 fix.aptach
+//        File fixFile = new File(MainActivity.this.getFilesDir(), "fix.apatch");
+//
+//        if (fixFile.exists()) {
+//            // 修复Bug
+//            try {
+//                // 立马生效不需要重启
+//                BaseApplication.mPatchManager.addPatch(fixFile.getAbsolutePath());
+//                Log.e(TAG, "initData: 修复成功");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                Log.e(TAG, "initData: 修复失败");
+//            }
+//        } else {
+//            Log.e(TAG, "没有找到apatch补丁文件 " + fixFile);
+//        }
+//    }
 
     @Override
     protected void initView() {

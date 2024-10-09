@@ -87,7 +87,7 @@ public class ViewUtils {
             } catch (Exception e) {
                 e.printStackTrace();
                 try {
-                    mMethod.invoke(mObject, null);
+//                    mMethod.invoke(mObject, null);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }

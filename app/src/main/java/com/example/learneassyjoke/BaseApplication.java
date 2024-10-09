@@ -5,7 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
-import com.alipay.euler.andfix.patch.PatchManager;
+//import com.alipay.euler.andfix.patch.PatchManager;
 import com.example.cachebug.ExceptionCrashHandler;
 import com.example.fixBug.FixDexManager;
 import com.example.framelibrary.skin.SkinManager;
@@ -13,8 +13,8 @@ import com.example.framelibrary.skin.SkinManager;
 
 public class BaseApplication extends Application {
     private static final String TAG = "BaseApplication";
-    //阿里AndFix的使用
-    public static PatchManager mPatchManager;
+//    //阿里AndFix的使用
+//    public static PatchManager mPatchManager;
 
     @Override
     public void onCreate() {
@@ -27,21 +27,21 @@ public class BaseApplication extends Application {
         SkinManager.getInstance().init(this);
     }
 
-    private void AliFix() {
-        mPatchManager = new PatchManager(this);
-        try {
-            // 初始化版本，获取当前应用的版本
-            PackageManager packageManager = this.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageInfo(this.getPackageName(), 0);
-            String versionName = packageInfo.versionName;
-            mPatchManager.init(versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // 加载之前的 apatch 包
-        mPatchManager.loadPatch();
-    }
+//    private void AliFix() {
+//        mPatchManager = new PatchManager(this);
+//        try {
+//            // 初始化版本，获取当前应用的版本
+//            PackageManager packageManager = this.getPackageManager();
+//            PackageInfo packageInfo = packageManager.getPackageInfo(this.getPackageName(), 0);
+//            String versionName = packageInfo.versionName;
+//            mPatchManager.init(versionName);
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//
+//        // 加载之前的 apatch 包
+//        mPatchManager.loadPatch();
+//    }
 
     //自己写的dex fix热修复
     private void fixDexBug() {
